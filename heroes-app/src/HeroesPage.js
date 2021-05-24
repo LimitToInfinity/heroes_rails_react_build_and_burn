@@ -13,10 +13,14 @@ function HeroesPage() {
       .then(heros => setHeroes(heros))
   }, [])
 
+  const addHero = newHero => {
+    setHeroes([...heroes, newHero])
+  }
+
   return (
     <section className="heros-page">
       <h2>Heroes Page</h2>
-      <HeroForm />
+      <HeroForm addHero={ addHero } />
       <HeroCardsContainer heroes={heroes} />
     </section>
   )

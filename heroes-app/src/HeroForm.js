@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 
-function HeroForm() {
+function HeroForm({ addHero }) {
 
   const [name, setName] = useState('')
-  const [weaponId, setWeaponId] = useState(0)
-  const [powers, setPowers] = useState([])
+  const [weaponId, setWeaponId] = useState("0")
+  const [powerIds, setPowerIds] = useState([])
   const [allWeapons, setAllWeapons] = useState([])
   const [allPowers, setAllPowers] = useState([])
 
@@ -12,7 +12,7 @@ function HeroForm() {
     fetch('http://localhost:3000/weapons')
       .then(response => response.json())
       .then(apiWeapons => {
-        setWeaponId(apiWeapons[0].id)
+        setWeaponId(`${apiWeapons[0].id}`)
         setAllWeapons(apiWeapons)
       })
 
@@ -38,7 +38,7 @@ function HeroForm() {
           id={`${power.name}-checkbox`}
           name={power.name}
           value={power.id}
-          onChange={event => setPowers([...powers, event.target.value])}
+          onChange={event => setPowerIds([...powerIds, event.target.value])}
         />
       </>
     )
@@ -54,13 +54,15 @@ function HeroForm() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        name,
-        weapon_id: weaponId,
-        powers
+        hero: {
+          name,
+          weapon_id: weaponId,
+          power_ids: powerIds
+        }
       })
     })
       .then(response => response.json())
-      .then(console.log)
+      .then(addHero)
   }
 
   return (
